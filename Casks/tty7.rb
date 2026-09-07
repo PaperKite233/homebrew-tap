@@ -1,6 +1,6 @@
 cask "tty7" do
-  version "26.9.0"
-  sha256 "d232c33be59a909addffa4cdb47902d87f93f586f41572a1cebb9f86716cf5ec"
+  version "26.8.3"
+  sha256 "a9856c48767e439fb7fffa3a6b4c2900ce8f537944c35f555b07dd822b9e04aa"
 
   url "https://github.com/l0ng-ai/tty7/releases/download/v#{version}/tty7-#{version}-macos-arm64.dmg"
   name "tty7"
