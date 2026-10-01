@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update AyuGram and Min casks from their latest GitHub releases."""
+"""Update all casks in this tap from their latest GitHub releases."""
 
 import hashlib
 import json
@@ -88,6 +88,37 @@ def update_min():
     print(f"updated min: {current} -> {version}")
 
 
+def update_tty7():
+    path = ROOT / "Casks" / "tty7.rb"
+    text = path.read_text()
+    release = latest_release("l0ng-ai/tty7")
+    version = release["tag_name"].removeprefix("v")
+    current = re.search(r'^  version "([^"]+)"', text, re.MULTILINE).group(1)
+    if version == current:
+        print(f"tty7 already up to date: {version}")
+        return
+
+    checksums_url = asset_url(release, "checksums.txt")
+    with request(checksums_url) as response:
+        checksums = {
+            name: digest
+            for line in response.read().decode().splitlines()
+            if line.strip()
+            for digest, name in [line.split(maxsplit=1)]
+        }
+    asset = f"tty7-{version}-macos-arm64.dmg"
+    if asset not in checksums:
+        raise RuntimeError(f"checksum not found for release asset: {asset}")
+
+    text = replace(r'^  version "[^"]+"', f'  version "{version}"', text)
+    text = replace(
+        r'^  sha256 "[0-9a-f]{64}"', f'  sha256 "{checksums[asset]}"', text
+    )
+    path.write_text(text)
+    print(f"updated tty7: {current} -> {version}")
+
+
 if __name__ == "__main__":
+    update_tty7()
     update_ayugram()
     update_min()

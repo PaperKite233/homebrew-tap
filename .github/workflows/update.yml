@@ -2,7 +2,8 @@ name: Update casks
 
 on:
   schedule:
-    - cron: "0 3 * * *"
+    # 06:00 Asia/Shanghai (UTC+8)
+    - cron: "0 22 * * *"
   workflow_dispatch:
 
 permissions:
@@ -17,13 +18,11 @@ jobs:
       - name: Update casks from upstream releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          python3 update-tty7.py
-          python3 update-casks.py
+        run: python3 update-casks.py
 
       - name: Verify updater scripts
         run: |
-          python3 -m py_compile update-tty7.py update-casks.py
+          python3 -m py_compile update-casks.py
           ruby -c Casks/tty7.rb
           ruby -c Casks/ayugram.rb
           ruby -c Casks/min.rb
