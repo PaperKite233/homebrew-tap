@@ -1,4 +1,4 @@
-name: Update tty7 formula
+name: Update casks
 
 on:
   schedule:
@@ -14,11 +14,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Bump formula if a new release exists
-        run: python3 update-tty7.py
+      - name: Update casks from upstream releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 update-tty7.py
+          python3 update-casks.py
+
+      - name: Verify updater scripts
+        run: |
+          python3 -m py_compile update-tty7.py update-casks.py
+          ruby -c Casks/tty7.rb
+          ruby -c Casks/ayugram.rb
+          ruby -c Casks/min.rb
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: bump tty7 to latest release"
-          file_pattern: Casks/tty7.rb
+          commit_message: "chore: update casks to latest releases"
+          file_pattern: Casks/*.rb
