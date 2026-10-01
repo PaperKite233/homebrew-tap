@@ -12,7 +12,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Update casks from upstream releases
         env:
@@ -29,7 +29,7 @@ jobs:
           ruby -c Casks/min.rb
 
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "chore: update casks to latest releases"
           file_pattern: Casks/*.rb
