@@ -26,6 +26,7 @@ jobs:
           ruby -c Casks/tty7.rb
           ruby -c Casks/ayugram.rb
           ruby -c Casks/min.rb
+          ruby -c Casks/gonavi.rb
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v7

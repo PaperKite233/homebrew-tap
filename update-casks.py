@@ -88,6 +88,28 @@ def update_min():
     print(f"updated min: {current} -> {version}")
 
 
+def update_gonavi():
+    path = ROOT / "Casks" / "gonavi.rb"
+    text = path.read_text()
+    release = latest_release("Syngnat/GoNavi")
+    version = release["tag_name"].removeprefix("v")
+    current = re.search(r'^  version "([^"]+)"', text, re.MULTILINE).group(1)
+    if version == current:
+        print(f"gonavi already up to date: {version}")
+        return
+
+    arm = sha256(asset_url(release, f"GoNavi-{version}-MacOS-Arm64.dmg"))
+    intel = sha256(asset_url(release, f"GoNavi-{version}-MacOS-Amd64.dmg"))
+    text = replace(r'^  version "[^"]+"', f'  version "{version}"', text)
+    text = replace(
+        r'^  sha256 arm:\s+"[0-9a-f]{64}",\n\s+intel: "[0-9a-f]{64}"',
+        f'  sha256 arm:   "{arm}",\n         intel: "{intel}"',
+        text,
+    )
+    path.write_text(text)
+    print(f"updated gonavi: {current} -> {version}")
+
+
 def update_tty7():
     path = ROOT / "Casks" / "tty7.rb"
     text = path.read_text()
@@ -122,3 +144,4 @@ if __name__ == "__main__":
     update_tty7()
     update_ayugram()
     update_min()
+    update_gonavi()
